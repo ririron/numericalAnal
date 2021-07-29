@@ -6,9 +6,12 @@ def saddle_func(x, y):
 
 
 tobj = HandleMesh.HandleMesh("R5")
-p2p  = tobj.getPoint2Point() 
-print(np.shape(p2p))
-
 val = saddle_func(tobj.n2c[:,0], tobj.n2c[:,1])
 
-tobj.show3dMeshData(val)
+
+p2p = tobj.getPoint2Point()
+print(p2p[6])
+
+print(tobj.getFmArray(p2p[7]))
+
+

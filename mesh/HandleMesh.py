@@ -22,6 +22,16 @@ class HandleMesh:
             data = [[float(d) if '.' in d else int(d) for d in row ] for row in reader ]
         return data
 
+    @staticmethod
+    def getFmArray(pt):
+
+        T = np.abs(0.5 * ( (pt[1][0] - pt[0][0]) * (pt[2][1] - pt[0][1]) 
+                            - (pt[2][0] - pt[0][0]) * (pt[1][1] - pt[0][1])))
+        
+
+        return (T / 12) * (np.ones((3, 3)) + np.identity(3))
+
+
     def setMeshData(self, fiName):
 
         self.n2c = np.array(self.readCSV(fiName + "_n2c.csv"))
