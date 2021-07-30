@@ -31,6 +31,21 @@ class HandleMesh:
 
         return (T / 12) * (np.ones((3, 3)) + np.identity(3))
 
+    @staticmethod
+    def getRiArray(pt):
+
+        T = np.abs(0.5 * ( (pt[1][0] - pt[0][0]) * (pt[2][1] - pt[0][1]) 
+                            - (pt[2][0] - pt[0][0]) * (pt[1][1] - pt[0][1])))
+        
+        xxMat = np.array([ [(pt[1, 1] - pt[2, 1])**2, (pt[1, 1] - pt[2, 1])*(pt[2, 1] - pt[0, 1]), (pt[0, 1] - pt[1, 1])*(pt[1, 1] - pt[2, 1])],
+                           [(pt[1, 1] - pt[2, 1])*(pt[2, 1] - pt[0, 1]), (pt[2, 1] - pt[0, 1])**2, (pt[0, 1] - pt[1, 1])*(pt[2, 1] - pt[0, 1])],
+                           [(pt[0, 1] - pt[1, 1])*(pt[1, 1] - pt[2, 1]), (pt[0, 1] - pt[1, 1])*(pt[2, 1] - pt[0, 1]), (pt[0, 1] - pt[1, 1])**2] ])
+
+        yyMat = np.array([ [(pt[1, 0] - pt[2, 0])**2, (pt[1, 0] - pt[2, 0])*(pt[2, 0] - pt[0, 0]), (pt[0, 0] - pt[1, 0])*(pt[1, 0] - pt[2, 0])],
+                           [(pt[1, 0] - pt[2, 0])*(pt[2, 0] - pt[0, 0]), (pt[2, 0] - pt[0, 0])**2, (pt[0, 0] - pt[1, 0])*(pt[2, 0] - pt[0, 0])],
+                           [(pt[0, 0] - pt[1, 0])*(pt[1, 0] - pt[2, 0]), (pt[0, 0] - pt[1, 0])*(pt[2, 0] - pt[0, 0]), (pt[0, 0] - pt[1, 0])**2] ])
+
+        return  (xxMat + yyMat) / (4*T)
 
     def setMeshData(self, fiName):
 
@@ -132,5 +147,5 @@ class HandleMesh:
         ax = Axes3D(fig)
        
         ax.add_collection3d(Poly3DCollection(p2p))
-        ax.set_zlim(-0.2, 0.2)
+        #ax.set_zlim(-0.2, 0.2)
         plt.show()
