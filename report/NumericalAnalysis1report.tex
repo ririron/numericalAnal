@@ -1,0 +1,148 @@
+\documentclass{jarticle}
+\usepackage{amsmath,amssymb}
+\usepackage[dvipdfmx]{graphicx}
+\usepackage{cases}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 使いたいパッケージがあればこの辺りに書いてください
+%\usepackage{empheq}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% マクロが使いたいときはこの辺りに書いてください
+\newcommand{\prob}[1]{\fbox{\Large \,#1\,}}
+\newcommand{\ans}[0]{\fbox{解答}\\}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% レポート提出の際は title, author, date を適当に変更してください
+\title{数値解析特論I 期末レポート}
+\author{担当教員： 木下武彦}
+\date{確定版}
+\begin{document}
+\maketitle
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\prob{1} 第2回 -- 第4回の講義資料にあるグループワーク課題のどれか1つを解いてください．
+
+\textbf{[補足]}
+\begin{itemize}
+\item 物理モデル(単位を持つ偏微分方程式)とそれを無次元化した数学モデル(無次元量のみから成る偏微分方程式)の両方を導出してください．
+\end{itemize}
+
+\ans{}
+第2回の課題1を解いた．スライド中の仮定を用いて，微小部分にかかる力は，
+\begin{eqnarray}
+  F(X + \Delta X, T) \sin\theta(X + \Delta X, T) - F(X, T) \sin\theta(X, T)
+  \label{braEq}
+\end{eqnarray}
+この微小部分における運動方程式は，$\rho$が$X$に依存するため，以下のように求まる．
+\begin{eqnarray}
+  \Delta X( \rho(X+\Delta X) - \rho(X) ) \frac{ \partial^2 U }{ \partial T^2 }(X,T) \nonumber \\
+  = F(X + \Delta X, T) \sin\theta(X + \Delta X, T) - F(X, T) \sin\theta(X, T)
+  \label{moEq}
+\end{eqnarray}
+式\ref{moEq}を変形し，$\Delta X \rightarrow 0$の極限を取ると，
+\begin{eqnarray*}
+  \frac{ \partial^2 U }{ \partial T^2 }(X,T) &=&
+  \frac{1}{\Delta X} \left( \frac{ F(X + \Delta X, T) \sin\theta(X + \Delta X, T) - F(X, T) \sin\theta(X, T) }{ \rho(X+\Delta X) - \rho(X) } \right) \\
+  &=& \frac{\partial}{\partial X} \left( \frac{F}{\rho} \sin\theta(X, T) \right)
+\end{eqnarray*}
+次に，右辺の分母・分子に$\frac{1}{\cos\theta(X, T)}$をかけて，
+$\cos^2\theta = \frac{1}{1 + \tan^2\theta}$より，
+\begin{eqnarray*}
+  &=& \frac{\partial}{\partial X} \left( \frac{ \frac{F}{\rho} \frac{\partial U}{\partial X}(X,T) }{\frac{1}{\cos\theta(X, T)}} \right) \\
+  &=& \frac{\partial}{\partial X} \left( \frac{ \frac{F}{\rho} \frac{\partial U}{\partial X}(X,T) }{\sqrt{1 + \left( \frac{\partial U}{\partial X}(X,T) \right)^2 }} \right)
+\end{eqnarray*}
+よって，以下の非線形偏微分方程式が求まる．
+\begin{eqnarray}
+  \frac{ \partial^2 U }{ \partial T^2 }(X,T) = \frac{\partial}{\partial X} \left( \frac{ \frac{F}{\rho} \frac{\partial U}{\partial X}(X,T) }{\sqrt{1 + \left( \frac{\partial U}{\partial X}(X,T) \right)^2 }} \right)
+  \label{parEq}
+\end{eqnarray}
+次に，式\ref{parEq}を無次元化する．スライドと同様に，$X$の取りえる範囲を$\left( X_L, X_R \right)$，
+$T$の取りえる範囲を$\left( 0, \infty \right)$とし，定数$X_{0} > 0$を取り，$X_0 := X_R - X_L$とする．
+また，$F(X, T)と\rho(X)$を無次元化するために，$X$同様，取りえる範囲をそれぞれ，$(F_L, F_R),(\rho_L, \rho_R)$と定め，
+定数$F_0, \rho_0 > 0$を取り，$F_0 := F_R - F_L, \rho_0 := \rho_R - \rho_L$とする．
+以下に，無次元化された変数を列挙する．
+\begin{eqnarray*}
+  u &:=& \frac{U}{X_0}(X, T) \qquad [m]\cdot[1/m] = [1] \\
+  x &:=& \frac{X - X_L}{X_0} \qquad [m]\cdot[1/m]  = [1] \\
+  f &:=& \frac{F}{F_0}(X, T) \qquad [N]\cdot[1/N]  = [1] \\
+  r &:=& \frac{\rho}{\rho_0}(X) \qquad [kg/m]\cdot[m/kg] = [1] \\
+  t &:=& \frac{1}{X_0}\sqrt{\left( \frac{F_0}{\rho_0} \right)} T \qquad [1/m]\cdot[m/s]\cdot[s] = 1 
+\end{eqnarray*}
+このとき，$u(x,t)$の満たす微分方程式は以下のようになる.
+\begin{eqnarray*}
+  \frac{\partial u}{\partial t}(x,t) &=& \frac{1}{X_0} \frac{\partial U}{\partial T}(X,T) \frac{dT}{dt}(t) = \sqrt{\frac{\rho_0}{F_0}} \frac{\partial U}{\partial T}(X,T) \\
+  \frac{\partial^2 u}{\partial t^2}(x,t) &=& X_0 \frac{\rho_0}{F_0} \frac{\partial^2 U}{\partial T^2}(X,T) \\
+  \frac{\partial u}{\partial x}(x,t) &=& \frac{\partial U}{\partial X}(X,T) \\
+  \frac{\partial^2 u}{\partial x^2}(x,t) &=& X_0 \frac{\partial^2 U}{\partial X^2}(X,T)
+\end{eqnarray*}
+これらの関係を用いて，式\ref{parEq}を変形すると，
+\begin{eqnarray*}
+  \frac{ \partial^2 U }{ \partial T^2 }(X,T) &=& \frac{\partial}{\partial X} \left( \frac{ \frac{F}{\rho} \frac{\partial U}{\partial X}(X,T) }{\sqrt{1 + \left( \frac{\partial U}{\partial X}(X,T) \right)^2 }} \right) \\
+  \frac{1}{X_0} \frac{F_0}{\rho_0} \frac{\partial^2 u}{\partial t^2}(x,t) &=& \frac{\partial}{\partial X} \left( \frac{ \frac{F}{\rho} \frac{\partial U}{\partial X}(X,T) }{\sqrt{1 + \left( \frac{\partial U}{\partial X}(X,T) \right)^2 }} \right) \\
+  \frac{1}{X_0} \frac{\partial^2 u}{\partial t^2}(x,t) &=& \frac{\partial}{\partial X} \left( \frac{ \frac{F}{F_0}\frac{\rho_0}{\rho}\frac{\partial U}{\partial X}(X,T) }{\sqrt{1 + \left( \frac{\partial U}{\partial X}(X,T) \right)^2 }} \right) \\
+  &=& \frac{\partial}{\partial X} \left( \frac{ \frac{\partial U}{\partial X}(X,T) }{\sqrt{1 + \left( \frac{\partial U}{\partial X}(X,T) \right)^2 }} \right) \frac{f}{r} \\
+  &=& \frac{ \frac{\partial^2 U}{\partial X^2} }{ \frac{\partial}{\partial X} \sqrt{1 + \left( \frac{\partial U}{\partial X}(X,T) \right)^2 } } \frac{f}{r} \\
+  &=& \frac{1}{X_0} \frac{f}{r} \sqrt{1 + \left( \frac{\partial u}{\partial x}(x,t) \right)^2}
+\end{eqnarray*} 
+よって，無次元化された偏微分方程式は以下のようになる．
+\begin{eqnarray}
+  \frac{\partial^2 u}{\partial t^2}(x,t) = \frac{f}{r} \sqrt{1 + \left( \frac{\partial u}{\partial x}(x,t) \right)^2}
+  \label{noDim}
+\end{eqnarray}
+\\
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\prob{2} $\Omega := (0,1) \times (0,1)$ とします．
+\[ f(x,y) := \left(x-\frac{1}{2}\right)e^{-5\sqrt{\left(x-\frac{1}{2}\right)^2+\left(y-\frac{1}{2}\right)^2}}, \quad \forall (x,y) \in \Omega \]
+のグラフを描画してください．
+
+\textbf{[補足]}
+\begin{itemize}
+\item グラフを描画する方法は NumPy + matplotlib, SymPy, $f$ の区分1次補間など，何を使っても構いません．
+\item 区分1次補間のグラフを描画する場合は，R20 メッシュを使ってください．
+\item 解答はグラフを描画した画像を貼り付けてください．
+\end{itemize}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\prob{3} $\phi_1(x) := \sin(\pi x)$, $\phi_2(x) := \sin(2 \pi x)$ とおきます．
+$\{\phi_i\}_{i=1}^2$ を基底とする関数空間を
+\[ V_h := \left\{\alpha_1\phi_1+\alpha_2\phi_2 \in H_0^1(0,1) \,\middle|\, \forall \alpha_1,\alpha_2 \in \mathbb{R}\right\} \]
+とします．
+このとき，任意に与えられた $V_h \ni f_h := c_1\phi_1 + c_2\phi_2$, $(c_1,c_2 \in \mathbb{R})$ に対して，次の変分問題：
+\begin{align}
+\int_0^1\frac{du_h}{dx}(x)\frac{dv_h}{dx}(x)\,dx = \int_0^1f_h(x)v_h(x)\,dx, \quad \forall v_h \in V_h \label{prob3}
+\end{align}
+の解 $u_h \in V_h$ を求めてください．
+
+\textbf{[補足]}
+\begin{itemize}
+\item $u_h = a_1\phi_1 + a_2\phi_2$, $(a_1,a_2 \in \mathbb{R})$, $v_h = b_1\phi_1 + b_2\phi_2$, $(b_1,b_2 \in \mathbb{R})$ として，これらを \eqref{prob3} に代入します．
+\item 積分は手で計算しても構いませんし，SymPy を使っても構いません．
+\item \eqref{prob3} は任意の $v_h \in V_h$ に対して等号が成り立つ $\Longleftrightarrow$ 任意の実数 $b_1,b_2 \in \mathbb{R}$ について積分を計算した等号が成り立つ $\Longleftrightarrow$ $b_1,b_2$ に関する恒等式となることから，\eqref{prob3} と同値な連立一次方程式がえられます．
+\item 連立一次方程式を解けば $u_h$ が求まります．具体的に，$a_1,a_2$ は $c_1,c_2$ を用いて書き下すことができます．
+\end{itemize}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\prob{4} $\Omega := (0,1) \times (0,1)$ の正方形領域とします．
+\[ g_D(x,y) := \begin{cases}
+y(1-y), &\forall (1,y) \in \partial\Omega \\
+0, &\textrm{otherwise}
+\end{cases} \]
+とおきます．
+このとき，次の Poisson 方程式：
+\[ \begin{cases}
+-\triangle u = 0 &\textrm{in}~\Omega \\
+u = g_D &\textrm{on}~\partial\Omega
+\end{cases} \]
+の有限要素解を求めてください．
+
+\textbf{[補足]}
+\begin{itemize}
+\item $\Omega$ のメッシュは講義資料で配布した R20 メッシュを使ってください．
+\item 解答は有限要素解のグラフを描画した画像を貼り付けてください．
+\end{itemize}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}
+
+
+
+
+
+
+
+
+

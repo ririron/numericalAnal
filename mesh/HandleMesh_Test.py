@@ -14,6 +14,7 @@ val = saddle_func(tobj.n2c[:,0], tobj.n2c[:,1])
 
 
 p2p = tobj.getPoint2Point()
+print(np.shape(p2p))
 L = np.zeros([20, 20])
 D = np.zeros([20, 20])
 
@@ -26,12 +27,6 @@ for i, e in enumerate(tobj.e2n):
             L[e[x]-1, e[y]-1] += fm[y, x]
             D[e[x]-1, e[y]-1] += ri[y, x]
 
-#今，上底の5接点にディレクレ境界条件が課されているので，
-#15~19の行を変更
-D[15:, :] = np.eye(20)[15:, :]
-
-D[0:5, :] = np.eye(20)[0:5, :]
-
 # 右辺ベクトルの作成
 b = np.zeros(20, dtype=np.float64)
 for k in range(len(tobj.e2n)):
@@ -39,6 +34,17 @@ for k in range(len(tobj.e2n)):
     p = tobj.n2c[node]
     b[node] += tobj.getFmArray(p).dot(func(p))
 
+#ディレクレ境界条件
+b[0:4]    = 0
+b[15:19]  = 0
+b[0:20:5] = 0
+b[4:20:5] = 0
+
+E = np.eye(np.shape(D)[0])
+D[0:4, :] = E[0:4, :]
+D[15:19, :] = E[15:19, :]
+D[0:20:5, :] = E[0:20:5, :]
+D[4:20:5, :] = E[4:20:5, :]
 
 uh = np.linalg.solve(D, b)
 print(uh)
